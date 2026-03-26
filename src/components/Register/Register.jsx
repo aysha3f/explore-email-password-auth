@@ -1,4 +1,6 @@
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React from 'react';
+import { auth } from '../../firebase.init';
 
 const Register = () => {
    
@@ -7,15 +9,23 @@ const Register = () => {
  const email = e.target.email.value;
  const password = e.target.password.value;
  console.log(email, password);
+
+//  create user
+createUserWithEmailAndPassword(auth, email, password)
+.then(result =>{
+    console.log(result);
+})
+.catch(error =>{
+    console.log(error);
+})
    }
    
     return (
-        <div>
-            <h1>This is the Register page</h1>
-            <form onSubmit={handleRegister}>
+        <div className='max-w-sm  mx-auto mt-12'>
+            <h1 className='text-2xl font-bold mb-4'>Please Register Here</h1>
+            <form className='space-y-4' onSubmit={handleRegister}>
                 {/* email */}
-<div className="join">
-  <div>
+
     <label className="input validator join-item">
       <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g
@@ -32,8 +42,6 @@ const Register = () => {
       <input type="email" name='email' placeholder="mail@site.com" required />
     </label>
     <div className="validator-hint hidden">Enter valid email address</div>
-  </div>
-</div>
 <br />
 {/* password */}
 <label className="input validator">
