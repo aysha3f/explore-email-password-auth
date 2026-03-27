@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { auth } from '../../firebase.init';
 
 const SignUp = () => {
-  
+   const [success,  setSucess] = useState(false);
     const [errorMessage, setErrorMessage] =  useState('');
 
     const handleSignUp = e =>{
@@ -11,17 +11,26 @@ const SignUp = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(email, password);
-
+   
+      setSucess(false);  
      setErrorMessage('');
 
+    //  password validation
+    const passwordRedEx =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  
+    if(passwordRedEx.test(password) === false){
+        setErrorMessage('Password must be at Least 6 characters Long and contain at Least one uppercase Letter, one Lowercase Letter and one number');
+        return;
+    }
         // create user
     createUserWithEmailAndPassword(auth, email, password)
     .then(result =>{
         console.log(result);
+        setSucess(true);
     })
     .catch(error =>{
         console.log(error);
-        setErrorMessage(error.message)
+        setErrorMessage(error.message);
     })
     }
   
@@ -39,6 +48,9 @@ const SignUp = () => {
         </form>
        {
     errorMessage && <p className='text-red-500'>{errorMessage}</p>
+    }
+    {
+        success && <p className='text-green-500'>User has created successfully!</p>
     }
       </div>
     </div>
