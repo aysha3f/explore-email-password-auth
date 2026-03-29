@@ -1,19 +1,26 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { auth } from '../../firebase.init';
+import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 const SignUp = () => {
    const [success,  setSucess] = useState(false);
     const [errorMessage, setErrorMessage] =  useState('');
-
+const [showPassword, setShowPassword] = useState(false);
     const handleSignUp = e =>{
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(email, password);
+        const terms = e.target.terms.checked;
+        console.log(email, password, terms);
    
       setSucess(false);  
      setErrorMessage('');
+
+     if(!terms){
+        setErrorMessage('Please accept Our Terms and Conditions')
+        return;
+     }
 
     //  password validation
     const passwordRedEx =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
@@ -42,8 +49,25 @@ const SignUp = () => {
           <label className="label">Email</label>
           <input type="email" name= 'email' className="input" placeholder="Email" />
           <label className="label mt-4">Password</label>
-          <input type="password" name='password' className="input" placeholder="Password" />
+         <div className='relative'>
+             <input 
+             type={showPassword ? 'text' : 'password'}
+             name='password' className="input" placeholder="Password" />
+             <button onClick={() =>{setShowPassword(!showPassword)}}
+              className="btn btn-xs absolute top-2 right-6">
+                {
+                    showPassword ? <FaRegEyeSlash></FaRegEyeSlash>
+                    : <FaRegEye></FaRegEye>
+                }
+              </button>
+         </div>
           <div><a className="link link-hover">Forgot password?</a></div>
+   
+              <label class="label mt-2">
+    <input type="checkbox" name='terms' class="checkbox" />
+   Accept Terms and Conditions
+  </label>
+       <br />
           <button className="btn btn-neutral mt-4">Sign Up</button>
         </form>
        {
