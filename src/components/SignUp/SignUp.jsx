@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import { auth } from '../../firebase.init';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
@@ -13,7 +13,9 @@ const [showPassword, setShowPassword] = useState(false);
         const email = e.target.email.value;
         const password = e.target.password.value;
         const terms = e.target.terms.checked;
-        console.log(email, password, terms);
+         const name = e.target.name.value;
+         const photo = e.target.photo.value;
+        console.log(email, password, terms, name, photo);
    
       setSucess(false);  
      setErrorMessage('');
@@ -36,6 +38,19 @@ const [showPassword, setShowPassword] = useState(false);
         console.log(result.user);
         setSucess(true);
         e.target.reset();
+
+        // update user profile
+        const profile = {
+            displayName: name,
+            photoURL: photo
+        }
+      updateProfile(result.user, profile)
+      .then(() =>{
+
+      })
+      .catch()
+
+
         // send verification email
         sendEmailVerification(result.user)
         .then(() =>{
@@ -54,6 +69,13 @@ const [showPassword, setShowPassword] = useState(false);
       <div className="card-body">
         <h1 className='text-3xl font-bold'>Please Sign Up now!</h1>
         <form onSubmit={handleSignUp}>
+            {/* User Name */}
+          <label className="label">Name</label>
+          <input type="text" name= 'name' className="input" placeholder="Your Name" />
+          {/* User photo URL */}
+          <label className="label">Photo URL</label>
+          <input type="text" name= 'photo' className="input" placeholder="Photo URL" />
+          {/* Email */}
           <label className="label">Email</label>
           <input type="email" name= 'email' className="input" placeholder="Email" />
           <label className="label mt-4">Password</label>
